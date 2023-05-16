@@ -1,0 +1,84 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<style>
+    a.article-link {
+        color: #198754;
+        text-decoration: none;
+    }
+</style>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Post content-->
+        <article>
+            <!-- Post header-->
+            <header class="mb-2">
+                <!-- Post title-->
+                <h3><a href="/article/viewingarticle/{{article.id}}" class="article-link">{{article.title}}</a></h3>
+                <!-- Post meta content-->
+                <div class="text text-muted fst-italic mb-2">Posted on {{article.created_date}} by {{article.author.username}}</div>
+            </header>
+            <!-- Preview image figure-->
+            {% if article.article_image %}
+            
+            <figure class="mb-5"><img class="img-fluid rounded" src="{{article.article_image.url}}" alt = ""/></figure>
+    
+            {% endif %}       
+            <!-- Post content-->
+            <section class="mb-5">
+                {{article.content|safe}}
+            </section>
+        </article>
+        <!-- Comment section-->
+        {% if comments %}
+            
+            <h5>Comments</h5>
+            <hr>
+            
+            {% for comment in comments  %}
+            
+            <div class="media mb-4">
+            <div class="media-body">
+                <h6 class="mt-0">{{comment.comment_author}}</h6>
+                {{comment.comment_date}} 
+                <br><br>
+                {{comment.comment_content}}
+            </div>
+            </div>
+            <hr>
+            
+            {% endfor %}
+
+        {% else %}
+        
+            <div class="alert alert-warning">
+                This article has not a comment yet. 
+            </div>
+        
+        {% endif %}
+
+        <div class="card my-4 justify-content-center">
+            <h5 class="card-header">Type comment:</h5>
+            <div class="card-body">
+                <form method="POST" action="{% url 'article:comment' article.id %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="formGroupExampleInput">Author</label>
+                        <input name = "comment_author" type="text" class="form-control" id="formGroupExampleInput" placeholder="Type a name">
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <label for="formGroupExampleInput">Comment</label>
+                      <textarea name = "comment_content" class="form-control" rows="3" placeholder="Type your comment"></textarea>
+                    </div>
+                    <br>
+                <button type="submit" class="btn btn-outline-success">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock body %}

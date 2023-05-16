@@ -1,0 +1,83 @@
+{% extends 'layout.html' %}
+
+
+    
+
+{% block body %}
+
+<style>
+    a.article-link {
+        color: #198754;
+        text-decoration: none;
+    }
+</style>
+
+<div class="container-fluid p-5 bg-success text-white text-center">
+    <h3>All articles</h3>
+</div>
+
+<br>
+
+<div class="text d-flex justify-content-center">
+    <form class="form-outline d-flex">
+        {% csrf_token %}
+        <input type="search" name = "keyword" class="form-control">
+        <button type="submit" class="btn btn-outline-success">Search</button>
+    </form>
+</div>
+
+<br>
+
+{% if articles %}
+
+{% for article in articles %}
+
+<div class="row">
+    <div class="col-sm-6 offset-sm-3">
+        <!-- Post content-->
+        <article>
+            <div class="post-content-wrapper">
+                <!-- Post header-->
+                <header class="mb-2">
+                    <!-- Post title-->
+                    <h3><a href="{% url 'article:viewingarticle' article.id %}" class="article-link">{{article.title}}</a></h3>
+                </header>
+
+                <!-- Post meta content-->
+                <div class="text text-muted fst-italic mb-1">Posted on {{article.created_date}} by {{article.author.username}}</div>
+
+                <!-- Preview image figure-->
+                {% if article.article_image %}
+
+                <figure class="mb-3"><img class="img-fluid rounded" src="{{article.article_image.url}}" alt = ""/></figure>
+
+                {% endif %}
+
+                <!-- Post content-->
+                <section class="mb-5">
+                    {{article.content|safe|truncatewords:15}}
+                    <p>
+                        <em>
+                            <a style="float : right;" href="{% url 'article:viewingarticle' article.id %}" class="btn btn-outline-success">Continue to read</a>
+                        </em>
+                    </p>
+                </section>
+
+                <br>
+                <hr>
+            
+            </div>
+        </article>
+    
+    </div>
+</div>
+
+{% endfor %}
+
+{% else %}
+
+<div class="alert alert-danger">There isn't an article yet.</div>
+
+{% endif %}
+
+{% endblock body %}

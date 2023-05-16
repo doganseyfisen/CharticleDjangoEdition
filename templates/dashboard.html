@@ -1,0 +1,58 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<style>
+  a.article-link {
+      color: #198754;
+      text-decoration: none;
+  }
+</style>
+
+<div class="container-fluid p-5 bg-success text-white text-center">
+  <h3>Dashboard</h3>
+</div>
+<br>
+<p>
+    Welcome, <medium>{{request.user.username}}</medium>
+</p>
+<hr>
+<a class = "btn btn-outline-success" href="{% url 'article:addarticle' %}">Add article</a>
+<hr>
+
+{% if articles %}
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Title</th>
+      <th scope="col">Author</th>
+      <th scope="col">Created Date</th>
+      <th scope="col">Edit</th>
+      <th scope="col">Delete</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    {% for article in articles %}
+    
+      <tr>
+          <td><a href="{% url 'article:viewingarticle' article.id %}" class="article-link">{{article.title}}</a></td>
+          <td>{{article.author.username}}</td>
+          <td>{{article.created_date}}</td>
+          <td><a href="{% url 'article:edit' article.id %}" class = "btn btn-outline-success">Edit</a></td>
+          <td><a href="{% url 'article:delete' article.id %}" class = "btn btn-outline-danger">Delete</a></td>
+      </tr>
+
+      {% endfor %}
+
+  </tbody>
+</table>
+
+{% else %}
+
+<div class = "alert alert-danger">There isn't an article yet.</div>
+
+{% endif %}
+
+{% endblock body %}
