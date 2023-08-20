@@ -16,13 +16,10 @@ def about(request):
 
 def articles(request):
     keyword = request.GET.get("keyword")
+    articles = Article.objects.all()
     
     if keyword:
         articles = Article.objects.filter(title__contains = keyword, content__contains = keyword)
-
-        return render(request, "articles.html", {"articles":articles})
-
-    articles = Article.objects.all()
 
     return render(request, "articles.html", {"articles":articles})
 
